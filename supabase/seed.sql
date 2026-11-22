@@ -36,7 +36,7 @@ insert into public.cards (number, name, type, move, description, art_url, total,
 (34, 'Football Fred', 'Fist', 'Rocket Throw', 'Throws so hard the catcher goes flying.', '/cards/34-football-fred.jpg', 200, '{49,18,5,8,6,28,57,29}', '{"Water","Wind"}', 'common', 'starter'),
 (35, 'Wyatt Kid', 'Lightning', 'Thunder Sprint', 'Runs so fast lightning trails behind him.', '/cards/35-wyatt-kid.jpg', 200, '{19,11,14,9,13,31,15,88}', '{"Plant","Fist"}', 'common', 'starter'),
 (36, 'Dad Zach', 'Metal', 'Dad Joke Shield', 'Blocks attacks with jokes so bad everyone groans.', '/cards/36-dad-zach.jpg', 200, '{28,41,32,14,25,4,23,33}', '{"Lightning","Fist"}', 'common', 'starter'),
-(37, 'Sviata Whirlwind', 'Wind', 'Tall Tale Teleport', 'So full of hot air from her stories, she blows herself anywhere in a blink.', '', 200, '{26,33,21,68,12,10,23,7}', '{"Ice","Metal"}', 'common', 'starter')
+(37, 'Sviata Whirlwind', 'Wind', 'Tall Tale Teleport', 'So full of hot air from her stories, she blows herself anywhere in a blink.', '/cards/37-sviata-whirlwind.jpg', 200, '{26,33,21,68,12,10,23,7}', '{"Ice","Metal"}', 'common', 'starter')
 on conflict (number) do update set
   name = excluded.name, type = excluded.type, move = excluded.move, description = excluded.description,
   art_url = excluded.art_url, total = excluded.total, spots = excluded.spots,
