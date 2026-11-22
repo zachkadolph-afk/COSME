@@ -77,6 +77,10 @@ On vercel.com: New Project > import the repo > add every variable from `.env.loc
 
 Edit `src/lib/starter-cards.ts`, then run `npx tsx scripts/make-seed.ts` and run the new `supabase/seed.sql` again. It's safe to re-run. Card art goes in `public/cards/`.
 
+## Printing the starter cards at home
+
+`npx tsx scripts/make-print-sheets.ts` makes `print/cosme-starter-cards.pdf`: 8 pages, fronts then backs, 9 cards per letter sheet at real trading card size (2.5 x 3.5 in). Print double-sided, flip on long edge, actual size (100%, not "fit to page"), on 250 to 300 gsm cardstock. Cut on the gray marks.
+
 ## Not built yet
 
 - Printing: paid orders show in `/admin` and Stripe; sending them to a print company (like QPMN or MakePlayingCards) is still manual.

@@ -13,11 +13,11 @@ export type StarterCard = {
 };
 
 // The 36 starter cards Zach and Wyatt designed. Names and moves are theirs to change.
-export const STARTER_CARDS: StarterCard[] = [
-  { number: 1, name: "Captain Storm", type: "Lightning", move: "Cloud Rider", description: "Surfs a thundercloud and throws lightning bolts from above.", art: "/cards/captain-storm.jpg", rarity: "shiny" },
-  { number: 2, name: "Blaze Knight", type: "Fire", move: "Fire Comet", description: "Spins in a circle and throws a giant fireball.", art: "/cards/blaze-knight.jpg" },
-  { number: 3, name: "Frostbyte", type: "Ice", move: "Blizzard Wall", description: "The ice king. Freezes lightning in midair.", art: "/cards/frostbyte.jpg", rarity: "rare" },
-  { number: 4, name: "Volt Viper", type: "Lightning", move: "Chain Zap", description: "One bolt bounces from enemy to enemy.", art: "/cards/volt-viper.jpg" },
+const CARDS: StarterCard[] = [
+  { number: 1, name: "Captain Storm", type: "Lightning", move: "Cloud Rider", description: "Surfs a thundercloud and throws lightning bolts from above.", rarity: "shiny" },
+  { number: 2, name: "Blaze Knight", type: "Fire", move: "Fire Comet", description: "Spins in a circle and throws a giant fireball." },
+  { number: 3, name: "Frostbyte", type: "Ice", move: "Blizzard Wall", description: "The ice king. Freezes lightning in midair.", rarity: "rare" },
+  { number: 4, name: "Volt Viper", type: "Lightning", move: "Chain Zap", description: "One bolt bounces from enemy to enemy." },
   { number: 5, name: "Spark Pup", type: "Lightning", move: "Static Pounce", description: "A lightning puppy with sparky fur." },
   { number: 6, name: "Ember Fox", type: "Fire", move: "Flame Dash", description: "Leaves a trail of fire behind its tail." },
   { number: 7, name: "Magma Mole", type: "Fire", move: "Lava Tunnel", description: "Tunnels straight through lava." },
@@ -51,3 +51,9 @@ export const STARTER_CARDS: StarterCard[] = [
   { number: 35, name: "Wyatt Kid", type: "Lightning", move: "Thunder Sprint", description: "Runs so fast lightning trails behind him." },
   { number: 36, name: "Dad Zach", type: "Metal", move: "Dad Joke Shield", description: "Blocks attacks with jokes so bad everyone groans." },
 ];
+
+/** Picture file for a card: public/cards/NN-name.jpg */
+export const artPath = (c: { number: number; name: string }) =>
+  `/cards/${String(c.number).padStart(2, "0")}-${c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.jpg`;
+
+export const STARTER_CARDS: StarterCard[] = CARDS.map((c) => ({ ...c, art: c.art ?? artPath(c) }));
