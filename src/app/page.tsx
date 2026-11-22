@@ -74,8 +74,8 @@ export default async function Home() {
             <ol className="stack" style={{ margin: 0, paddingLeft: 22, fontSize: 17, color: "#d9d4ea" }}>
               <li><b style={{ color: "#fff" }}>Bring 10 cards.</b> One pack is a full deck (15 max). Only one hero card allowed.</li>
               <li><b style={{ color: "#fff" }}>Spin it 5 times.</b> Card face down, spin, then flip it over.</li>
-              <li><b style={{ color: "#fff" }}>The spot facing your rival fights.</b> Each card has 8 power spots: 4 corners and 4 edges.</li>
-              <li><b style={{ color: "#fff" }}>Type beats numbers.</b> If your type beats theirs, you win, even against 8,000.</li>
+              <li><b style={{ color: "#fff" }}>The spot facing your rival fights.</b> Every card has all 8 types, one on each spot (4 corners, 4 edges). Its biggest number is its main type, and its weak spot sits right opposite.</li>
+              <li><b style={{ color: "#fff" }}>Type beats numbers.</b> If the type on your spot beats the type on theirs, you win, even against 8,000.</li>
               <li><b style={{ color: "#fff" }}>No type advantage?</b> The bigger number wins.</li>
               <li><b style={{ color: "#fff" }}>Most wins out of 10 takes the game.</b> Nobody loses cards by playing. Trading is separate.</li>
             </ol>

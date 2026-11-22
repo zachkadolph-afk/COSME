@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { GameCard, type CardData } from "@/components/GameCard";
 import { SPOT_NAMES, STANDARD_DECK, battle } from "@/lib/game";
 
-type Round = { a: CardData; b: CardData; spotA: number; spotB: number; winner: 1 | -1 | 0; reason: string };
+type Round = { a: CardData; b: CardData; spotA: number; spotB: number; winner: 1 | -1 | 0; reason: string; ta: string; tb: string };
 
 function shuffle<T>(xs: T[]): T[] {
   const a = [...xs];
@@ -47,7 +47,7 @@ export function Battle({ pool }: { pool: CardData[] }) {
     const spotA = Math.floor(Math.random() * 8);
     const spotB = Math.floor(Math.random() * 8);
     const r = battle(a, spotA, b, spotB);
-    setRounds([...rounds, { a, b, spotA, spotB, winner: r.winner, reason: r.reason }]);
+    setRounds([...rounds, { a, b, spotA, spotB, winner: r.winner, reason: r.reason, ta: r.ta, tb: r.tb }]);
   }
 
   function again() {
@@ -65,7 +65,7 @@ export function Battle({ pool }: { pool: CardData[] }) {
     <div className="wrap stack-lg" style={{ alignItems: "center", paddingBottom: 48 }}>
       <div className="stack" style={{ alignItems: "center", textAlign: "center" }}>
         <h1>Battle</h1>
-        <p className="muted" style={{ maxWidth: 620 }}>Each card spins like a bottle. Whichever of its 8 spots faces the middle line fights. Type advantage always wins, otherwise the bigger number wins.</p>
+        <p className="muted" style={{ maxWidth: 620 }}>Every card has a bit of all 8 types, one on each spot. Each card spins like a bottle, and the two spots facing the middle line fight. Type advantage always wins, otherwise the bigger number wins.</p>
       </div>
       <div className="row" style={{ gap: 28, fontFamily: "var(--display)", justifyContent: "center" }}>
         <div className="stack" style={{ alignItems: "center", gap: 0 }}><span className="faint" style={{ fontFamily: "var(--body)", fontWeight: 800 }}>YOU</span><span style={{ fontSize: 44, color: "var(--orange)" }}>{me}</span></div>
@@ -75,7 +75,7 @@ export function Battle({ pool }: { pool: CardData[] }) {
       <div className="row" style={{ justifyContent: "center", alignItems: "center", gap: 28 }}>
         <div className="stack" style={{ alignItems: "center" }}>
           <GameCard card={showA} width={260} highlight={last?.spotA} />
-          <span className="faint">{last ? `${SPOT_NAMES[last.spotA]}: ${last.a.spots[last.spotA]}` : "Your card"}</span>
+          <span className="faint">{last ? `${SPOT_NAMES[last.spotA]}: ${last.ta} ${last.a.spots[last.spotA]}` : "Your card"}</span>
         </div>
         <div className="stack" style={{ alignItems: "center", minWidth: 220, textAlign: "center" }}>
           <div style={{ fontFamily: "var(--display)", fontSize: 32, color: "var(--purple)" }}>VS</div>
@@ -88,7 +88,7 @@ export function Battle({ pool }: { pool: CardData[] }) {
         </div>
         <div className="stack" style={{ alignItems: "center" }}>
           <GameCard card={showB} width={260} highlight={last?.spotB} />
-          <span className="faint">{last ? `${SPOT_NAMES[last.spotB]}: ${last.b.spots[last.spotB]}` : "Computer's card"}</span>
+          <span className="faint">{last ? `${SPOT_NAMES[last.spotB]}: ${last.tb} ${last.b.spots[last.spotB]}` : "Computer's card"}</span>
         </div>
       </div>
     </div>

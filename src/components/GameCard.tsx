@@ -1,4 +1,4 @@
-import { TYPE_INFO, type CardType } from "@/lib/game";
+import { TYPE_INFO, spotTypes, type CardType } from "@/lib/game";
 
 export type CardData = {
   id?: string;
@@ -55,10 +55,17 @@ export function GameCard({
   const color = TYPE_INFO[card.type].color;
   const border = hero ? "linear-gradient(150deg, #FFD23F, #FF8A3D 35%, #8B5CF6 70%, #3B82F6)" : color;
   const s = card.spots;
+  const types = spotTypes(card);
+  const iconSize = Math.max(10, Math.round(width / 22));
   const spot = (i: number, style: React.CSSProperties) => (
     <span
+      title={`${types[i]} ${s[i]}`}
       style={{
         position: "absolute",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 2,
+        whiteSpace: "nowrap",
         fontFamily: "var(--display)",
         fontSize: Math.max(10, Math.round(width / 24)),
         color: highlight === i ? "#0A0A0F" : "#D9D4EA",
@@ -69,12 +76,16 @@ export function GameCard({
         ...style,
       }}
     >
+      <span style={{ width: iconSize, height: iconSize, borderRadius: "50%", background: TYPE_INFO[types[i]].color, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+        <TypeIcon type={types[i]} size={Math.round(iconSize * 0.68)} />
+      </span>
       {fmt(s[i])}
+      <span className="sr-only">{types[i]}</span>
     </span>
   );
   return (
     <div style={{ width, aspectRatio: "5 / 7", borderRadius: 18, padding: 6, background: border, flex: "0 0 auto" }}>
-      <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: 13, background: "#120F1C", padding: Math.round(width / 11) }}>
+      <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: 13, background: "#120F1C", padding: Math.round(width / 9.5) }}>
         {spot(0, { top: 4, left: 6 })}
         {spot(1, { top: 4, left: 0, right: 0, margin: "0 auto", width: "fit-content" })}
         {spot(2, { top: 4, right: 6 })}
@@ -101,7 +112,7 @@ export function GameCard({
           </div>
           <div style={{ background: "#F5F3FF", color: "#120F1C", borderRadius: 6, padding: "5px 8px", fontSize: Math.max(10, Math.round(width / 22)) }}>
             <div style={{ fontWeight: 800 }}>{card.move}</div>
-            <div>Weak to {card.weaknesses.join(" and ") || "nothing"}</div>
+            <div>Biggest: {card.type} · Weak spot: {types[s.indexOf(Math.min(...s))]}</div>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: Math.max(9, Math.round(width / 26)), fontWeight: 800, color: hero ? "#FFD23F" : "#B9B4C9" }}>
             <span>{hero ? "YOUR HERO" : card.rarity && card.rarity !== "common" ? card.rarity.toUpperCase() : card.type.toUpperCase()}</span>

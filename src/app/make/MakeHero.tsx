@@ -181,7 +181,7 @@ export function MakeHero({ userId, hasConsent, imageServiceReady }: { userId: st
 
         <div className="panel stack" style={{ gap: 6 }}>
           <b>Your power spots total 8,000</b>
-          <span className="muted">8 spots: 4 corners and 4 edges. Your strongest spot always sits opposite your weakest, so even a hero card can lose a spin.</span>
+          <span className="muted">Your hero has a bit of all 8 types, one on each spot. The type you pick gets the biggest number, and your weak spot sits right opposite it, so even a hero card can lose a spin.</span>
         </div>
 
         <label className="check panel">

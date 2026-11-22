@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { STARTER_CARDS } from "../src/lib/starter-cards";
-import { COMMUNITY_TOTAL, TYPE_INFO, makeSpots, weaknessesOf, type CardType } from "../src/lib/game";
+import { COMMUNITY_TOTAL, TYPE_INFO, makeSpots, spotTypes, weaknessesOf, type CardType } from "../src/lib/game";
 
 const require = createRequire(import.meta.url);
 const font = (p: string) => readFileSync(resolve("node_modules/@fontsource", p)).toString("base64");
@@ -34,7 +34,9 @@ function front(c: (typeof STARTER_CARDS)[number]) {
   const color = TYPE_INFO[c.type].color;
   const rarity = c.rarity ?? "common";
   const border = rarity === "shiny" ? "linear-gradient(150deg,#FFD23F,#FF8A3D 35%,#8B5CF6 70%,#3B82F6)" : rarity === "rare" ? `linear-gradient(150deg,#E5E7EB,${color} 45%,#E5E7EB)` : color;
-  const spot = (i: number, cls: string) => `<span class="spot ${cls}">${fmt(s[i])}</span>`;
+  const types = spotTypes({ type: c.type, spots: s, weaknesses: weak });
+  const spot = (i: number, cls: string) =>
+    `<span class="spot ${cls}"><span class="rot"><span class="sdot" style="background:${TYPE_INFO[types[i]].color}">${icon(types[i], 7)}</span>${fmt(s[i])}</span></span>`;
   return `
   <div class="card" style="background:${border}">
     <div class="inner">
@@ -48,7 +50,7 @@ function front(c: (typeof STARTER_CARDS)[number]) {
         <div class="move">
           <b>${esc(c.move)}</b>
           <span class="desc">${esc(c.description)}</span>
-          <span class="weak">Weak to ${weak.map((w) => `<span class="mini" style="background:${TYPE_INFO[w as CardType].color}">${icon(w as CardType, 7)}</span>${w}`).join(" ")}</span>
+          <span class="weak">Biggest <span class="mini" style="background:${color}">${icon(c.type, 7)}</span>${c.type} · Weak spot <span class="mini" style="background:${TYPE_INFO[types[s.indexOf(Math.min(...s))]].color}">${icon(types[s.indexOf(Math.min(...s))], 7)}</span>${types[s.indexOf(Math.min(...s))]}</span>
         </div>
         <div class="foot"><span>${rarity === "common" ? c.type.toUpperCase() : rarity.toUpperCase() + " · " + c.type.toUpperCase()}</span><span>#${String(c.number).padStart(3, "0")}</span></div>
       </div>
@@ -106,11 +108,16 @@ body{margin:0;font-family:Inter,sans-serif}
 .page{position:relative;width:8.5in;height:11in;page-break-after:always;overflow:hidden;background:#fff}
 .grid{position:absolute;left:.5in;top:.25in;display:grid;grid-template-columns:repeat(3,2.5in);grid-template-rows:repeat(3,3.5in)}
 .card{width:2.5in;height:3.5in;padding:.05in;border-radius:.13in}
-.inner{position:relative;height:100%;border-radius:.09in;background:#120F1C;padding:.17in}
-.spot{position:absolute;font-family:Bungee;font-size:7.5pt;color:#EEEAF8;line-height:1}
-.tl{top:.05in;left:.07in}.tr{top:.05in;right:.07in}.t{top:.05in;left:0;right:0;text-align:center}
-.bl{bottom:.05in;left:.07in;transform:rotate(180deg)}.br{bottom:.05in;right:.07in;transform:rotate(180deg)}.b{bottom:.05in;left:0;right:0;text-align:center;transform:rotate(180deg)}
-.r{right:-.03in;top:50%;transform:translateY(-50%) rotate(90deg)}.l{left:-.03in;top:50%;transform:translateY(-50%) rotate(-90deg)}
+.inner{position:relative;height:100%;border-radius:.09in;background:#120F1C;padding:.19in}
+.spot{position:absolute;font-family:Bungee;font-size:7.5pt;color:#EEEAF8;line-height:1;display:flex;align-items:center;white-space:nowrap}
+.sdot{width:10px;height:10px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.rot{display:inline-flex;align-items:center;gap:2px}
+.tl{top:.05in;left:.07in}.tr{top:.05in;right:.07in}.t{top:.05in;left:0;right:0;justify-content:center}
+.bl{bottom:.05in;left:.07in}.br{bottom:.05in;right:.07in}.b{bottom:.05in;left:0;right:0;justify-content:center}
+.bl .rot,.br .rot,.b .rot{transform:rotate(180deg)}
+.r,.l{top:50%;width:.19in;height:0;justify-content:center}
+.r{right:0}.l{left:0}
+.r .rot{transform:rotate(90deg)}.l .rot{transform:rotate(-90deg)}
 .frame{height:100%;border:2px solid;border-radius:5px;background:#1A1626;padding:5px;display:flex;flex-direction:column;gap:4px;color:#F5F3FF}
 .head{display:flex;justify-content:space-between;align-items:center;gap:4px}
 .name{font-weight:800;font-size:9.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

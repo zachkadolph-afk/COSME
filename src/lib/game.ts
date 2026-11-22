@@ -106,21 +106,52 @@ export function makeSpots(seedText: string, total: number): number[] {
 export type BattleCard = { type: CardType; spots: number[]; weaknesses: string[] };
 
 /**
+ * Every card has a little of all 8 types, like a personality profile (Zach and Wyatt's rule).
+ * Each of the 8 spots is one type:
+ *  - the biggest number is the card's main type,
+ *  - the smallest number, right opposite it, is its weak spot (a type that beats the main type),
+ *  - the other 6 types fill the remaining spots.
+ * Worked out from the card itself, so it is the same on the website, in the database and in print.
+ */
+export function spotTypes(card: BattleCard): CardType[] {
+  const s = card.spots;
+  const hi = s.indexOf(Math.max(...s));
+  const lo = s.indexOf(Math.min(...s));
+  const weak = (card.weaknesses.find((w) => isCardType(w) && w !== card.type) as CardType | undefined) ?? weaknessesOf(card.type)[0];
+  const rest = TYPES.filter((t) => t !== card.type && t !== weak);
+  const rand = seeded(`${card.type}-${s.join(",")}`);
+  for (let i = rest.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [rest[i], rest[j]] = [rest[j], rest[i]];
+  }
+  const out = new Array<CardType>(8);
+  out[hi] = card.type;
+  out[lo] = weak;
+  let k = 0;
+  for (let i = 0; i < 8; i++) if (i !== hi && i !== lo) out[i] = rest[k++];
+  return out;
+}
+
+/**
  * Result of one battle: 1 = A wins, -1 = B wins, 0 = draw.
- * Type advantage always wins, whatever the numbers. A card's weaknesses list
- * (normally from the type chart, special cards can differ) decides it.
+ * The two spots that face each other fight, each with its own type and number.
+ * Type advantage always wins, whatever the numbers. Otherwise the bigger number wins.
  */
 export function battle(a: BattleCard, spotA: number, b: BattleCard, spotB: number) {
   const va = a.spots[spotA];
   const vb = b.spots[spotB];
-  const aBeatsB = b.weaknesses.includes(a.type);
-  const bBeatsA = a.weaknesses.includes(b.type);
-  if (aBeatsB && !bBeatsA) return { winner: 1 as const, reason: `${a.type} beats ${b.type}` };
-  if (bBeatsA && !aBeatsB) return { winner: -1 as const, reason: `${b.type} beats ${a.type}` };
-  if (va === vb) return { winner: 0 as const, reason: "Same number" };
+  const ta = spotTypes(a)[spotA];
+  const tb = spotTypes(b)[spotB];
+  const aBeatsB = TYPE_INFO[ta].beats.includes(tb);
+  const bBeatsA = TYPE_INFO[tb].beats.includes(ta);
+  if (aBeatsB && !bBeatsA) return { winner: 1 as const, reason: `${ta} ${va} beats ${tb} ${vb}: ${ta} beats ${tb}`, ta, tb };
+  if (bBeatsA && !aBeatsB) return { winner: -1 as const, reason: `${tb} ${vb} beats ${ta} ${va}: ${tb} beats ${ta}`, ta, tb };
+  if (va === vb) return { winner: 0 as const, reason: `${ta} ${va} vs ${tb} ${vb}: same number`, ta, tb };
   return {
     winner: (va > vb ? 1 : -1) as 1 | -1,
-    reason: `No type advantage, ${Math.max(va, vb)} beats ${Math.min(va, vb)}`,
+    reason: `${ta} ${va} vs ${tb} ${vb}: no type advantage, ${Math.max(va, vb)} wins`,
+    ta,
+    tb,
   };
 }
 
