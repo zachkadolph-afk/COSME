@@ -4,7 +4,7 @@ import { supabaseServer } from "./supabase/server";
 import type { CardData } from "@/components/GameCard";
 
 export const supabaseConfigured = () =>
-  !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 
 /** Starter cards built locally, used before Supabase is connected. */
 export function localStarterCards(): CardData[] {
