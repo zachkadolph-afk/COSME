@@ -1,4 +1,4 @@
-// Builds print/cosme-starter-cards.pdf: 4 double-sided letter sheets, 9 cards per sheet.
+// Builds print/cosme-starter-cards.pdf: double-sided letter sheets, 9 cards per sheet.
 // Page order is front, back, front, back... Print double-sided, flip on the long edge.
 // Run: npx tsx scripts/make-print-sheets.ts
 import { readFileSync, writeFileSync } from "node:fs";
@@ -46,7 +46,7 @@ function front(c: (typeof STARTER_CARDS)[number]) {
           <span class="name">${esc(c.name)}</span>
           <span class="hp"><span style="color:${color}">${fmt(total)}</span><span class="badge" style="background:${color}">${icon(c.type, 10)}</span></span>
         </div>
-        <img class="art" src="${img(c.art!.replace("/cards/", "print/art/"))}">
+        ${c.art ? `<img class="art" src="${img(c.art.replace("/cards/", "print/art/"))}">` : `<div class="art" style="background:#0A0A0F;display:flex;align-items:center;justify-content:center">${icon(c.type, 64, color, 1.6)}</div>`}
         <div class="move">
           <b>${esc(c.move)}</b>
           <span class="desc">${esc(c.description)}</span>
@@ -88,13 +88,14 @@ const marks = () => {
 };
 
 const pages: string[] = [];
-for (let sheet = 0; sheet < 4; sheet++) {
+const SHEETS = Math.ceil(STARTER_CARDS.length / 9);
+for (let sheet = 0; sheet < SHEETS; sheet++) {
   const nine = STARTER_CARDS.slice(sheet * 9, sheet * 9 + 9);
-  pages.push(`<section class="page"><div class="grid">${nine.map(front).join("")}</div>${marks()}<div class="label">COSME starter set · sheet ${sheet + 1} of 4 · fronts</div></section>`);
+  pages.push(`<section class="page"><div class="grid">${nine.map(front).join("")}</div>${marks()}<div class="label">COSME starter set · sheet ${sheet + 1} of ${SHEETS} · fronts</div></section>`);
   // Flip on the long edge mirrors left and right, so each row's backs go in reverse order.
   const backs: string[] = [];
   for (let r = 0; r < 3; r++) for (let col = 2; col >= 0; col--) backs.push(nine[r * 3 + col] ? back() : `<div class="card empty"></div>`);
-  pages.push(`<section class="page"><div class="grid">${backs.join("")}</div>${marks()}<div class="label">sheet ${sheet + 1} of 4 · backs</div></section>`);
+  pages.push(`<section class="page"><div class="grid">${backs.join("")}</div>${marks()}<div class="label">sheet ${sheet + 1} of ${SHEETS} · backs</div></section>`);
 }
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>

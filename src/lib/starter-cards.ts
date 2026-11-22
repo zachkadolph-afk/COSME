@@ -50,6 +50,7 @@ const CARDS: StarterCard[] = [
   { number: 34, name: "Football Fred", type: "Fist", move: "Rocket Throw", description: "Throws so hard the catcher goes flying." },
   { number: 35, name: "Wyatt Kid", type: "Lightning", move: "Thunder Sprint", description: "Runs so fast lightning trails behind him." },
   { number: 36, name: "Dad Zach", type: "Metal", move: "Dad Joke Shield", description: "Blocks attacks with jokes so bad everyone groans." },
+  { number: 37, name: "Sviata Whirlwind", type: "Wind", move: "Tall Tale Teleport", description: "So full of hot air from her stories, she blows herself anywhere in a blink.", art: "" }, // picture coming soon
 ];
 
 /** Picture file for a card: public/cards/NN-name.jpg */
