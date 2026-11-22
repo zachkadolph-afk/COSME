@@ -11,6 +11,8 @@ export async function GET() {
 
   let database = false;
   let starterCards = 0;
+  let databaseStatus: number | string | null = null;
+  let databaseMessage: string | null = null;
   if (url && anon) {
     try {
       const res = await fetch(`${url}/rest/v1/cards?select=id&status=eq.starter`, {
@@ -18,10 +20,14 @@ export async function GET() {
         cache: "no-store",
       });
       database = res.ok;
+      databaseStatus = res.status;
+      if (!res.ok) databaseMessage = (await res.text()).slice(0, 200);
       const range = res.headers.get("content-range");
       starterCards = range ? Number(range.split("/")[1]) || 0 : 0;
-    } catch {
+    } catch (e) {
       database = false;
+      databaseStatus = "could not connect";
+      databaseMessage = e instanceof Error ? e.message.slice(0, 200) : null;
     }
   }
 
@@ -30,6 +36,11 @@ export async function GET() {
     supabasePublicKey: !!anon,
     supabaseServerKey: !!service,
     databaseReachable: database,
+    databaseStatus,
+    databaseMessage,
+    // The project address is public (it's in every page), so it's safe to show here.
+    supabaseAddress: url ? url.replace(/^(https?:\/\/[^/]+).*$/, "$1") + (url.length > url.replace(/^(https?:\/\/[^/]+).*$/, "$1").length ? " (has extra text after the address)" : "") : null,
+    publicKeyLooksLike: anon ? (anon.startsWith("eyJ") ? "legacy anon key" : anon.startsWith("sb_publishable_") ? "new publishable key" : anon.startsWith("sb_secret_") ? "SECRET key in the public slot" : "unrecognized") : null,
     starterCards,
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || null,
     stripe: stripeConfigured(),
