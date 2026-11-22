@@ -73,7 +73,7 @@ function back() {
   <div class="card back">
     <div class="backin">
       <div class="word flip">COSME</div>
-      <div class="emblem"><div class="logo">${symmetricPlanet(170)}</div></div>
+      <div class="emblem"><div class="logo">${logo(205)}</div></div>
       <div class="word">COSME</div>
     </div>
   </div>`;
@@ -134,7 +134,7 @@ body{margin:0;font-family:Inter,sans-serif}
 .backin{height:100%;border-radius:.09in;background:radial-gradient(circle at 50% 50%,#2A1450,#0A0A0F 72%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:.16in 0}
 .word{font-family:Bungee;font-size:20pt;color:#FF8A3D;letter-spacing:1px}
 .flip{transform:rotate(180deg)}
-.emblem{position:relative;width:1.95in;height:1.95in}
+.emblem{position:relative;width:2.2in;height:1.95in}
 .logo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .ringdot{position:absolute;width:16px;height:16px;transform:translate(-50%,-50%)}
 .empty{background:none}
